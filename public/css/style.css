@@ -2,7 +2,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f2f2f2;
+  background-color: #ffffff;
   padding: 10px;
 }
 
@@ -13,4 +13,8 @@ nav {
 nav a {
   display: block;
   padding: 10px;
+}
+
+.nav-item {
+  background-color: #ffffff;
 }
