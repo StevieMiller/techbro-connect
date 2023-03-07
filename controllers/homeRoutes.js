@@ -1,28 +1,31 @@
-const router = require('express').Router();
-const Dish = require('../models/Dish');
+const router = require("express").Router();
+const { Post } = require("../models");
 
-// route to get all dishes
+// route to get all posts
 router.get('/', async (req, res) => {
-    const dishData = await Dish.findAll().catch((err) => { 
-        res.json(err);
-      });
-        const dishes = dishData.map((dish) => dish.get({ plain: true }));
-        res.render('all', { dishes });
-      });
-  
-  // route to get one dish
-  router.get('/dish/:id', async (req, res) => {
     try{ 
-        const dishData = await Dish.findByPk(req.params.id);
-        if(!dishData) {
-            res.status(404).json({message: 'No dish with this id!'});
-            return;
-        }
-        const dish = dishData.get({ plain: true });
-        res.render('dish', dish);
+        const postData = await Post.findAll({
+            include: [
+                {
+                    model: User,
+                    order: ['date_created']
+                }
+            ]
+        });
+        const posts = postData.map((post) => post.get({ plain: true }));
+        res.render('homepage', { posts, loggedIn: req.session.loggedIn });
       } catch (err) {
           res.status(500).json(err);
       };     
   });
+
+  // Login route
+router.get('/login', (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect('/dashboard');
+    return;
+  }
+  res.render('login');
+});
 
 module.exports = router;
